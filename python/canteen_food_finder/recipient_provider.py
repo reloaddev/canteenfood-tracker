@@ -21,24 +21,20 @@ def get_recipients():
             "notified_for": format_Date(r["Notified_For"]["S"])
         }, raw_recipients))
     except Exception as exc:
-        print("Database error", exc)
-        emails = []
+        print("Database SCAN failed", exc)
+        raise
     return recipients
 
 
-def update_recipient(recipient, last_meal_date):
-    email_address = recipient["email"] 
-    last_meal_date_str = last_meal_date.strftime("%Y-%m-%d")
-    try:
-        response = dynamodbClient.update_item(
-            TableName="Recipient",
-            Key={"Email": {"S": email_address}},
-            UpdateExpression="set Notified_For = :n",
-            ExpressionAttributeValues={
-                ":n": {"S": last_meal_date_str},
-            },
-            ReturnValues="UPDATED_NEW"
-        )
-    except:
-        print("DynamoDB update failed")
-        raise
+def get_recipients_with_available_meals(available_meals):
+    recipients = get_recipients()
+    for recipient in recipients:
+        meal_searchterms = recipient["meals"]
+        available_wanted_meals = [a for a in available_meals for m in meal_searchterms if m.casefold() in a["name"].casefold()]
+        available_wanted_meals = list(map(lambda m: {
+            "name": m["name"],
+            "date": m["date"]
+        }, available_wanted_meals))
+        recipient["meals"] = available_wanted_meals
+    recipients_with_available_meals = list(filter(lambda r: r["meals"], recipients))
+    return recipients_with_available_meals

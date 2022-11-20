@@ -2,6 +2,26 @@ import boto3
 from datetime import datetime
 
 sesClient = boto3.client('ses')
+dynamodbClient = boto3.client('dynamodb')
+
+
+def update_recipient(recipient, last_meal_date):
+    email_address = recipient["email"] 
+    last_meal_date_str = last_meal_date.strftime("%Y-%m-%d")
+    try:
+        response = dynamodbClient.update_item(
+            TableName="Recipient",
+            Key={"Email": {"S": email_address}},
+            UpdateExpression="set Notified_For = :n",
+            ExpressionAttributeValues={
+                ":n": {"S": last_meal_date_str},
+            },
+            ReturnValues="UPDATED_NEW"
+        )
+    except Exception as exc:
+        print("Database UPDATE failed", exc)
+        raise
+
 
 def buildHTMLContent(meals):
     htmlContent = "Seid gegrüßt, Liebhaber der guten Kost! <br><br>"
