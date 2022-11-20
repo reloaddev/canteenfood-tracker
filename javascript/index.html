@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canteen Food Tracker</title>
+  <link rel="icon" href="./images/favicon.ico">
+</head>
+
+<body>
+  <h1>Canteen Food Tracker <span>Lüneburg</span></h1>
+  <p>Check your subscribed meals:</p>
+  <label for="email">Enter Email</label>
+  <input type="email" name="email">
+  <button id="get-meals-btn" class="submit-button">Get Meals</button>
+  <ul id="list">
+  </ul>
+  <!-- <p>Select meals you want to get notified about:</p>
+  <form id="form">
+    <label for="soygyros">Soy Gyros</label>
+    <input name="soygyros" type="checkbox">
+    <label for="potatowedges">Potato Wedges</label>
+    <input name="potatowedges" type="checkbox">
+  </form>
+  <button type="submit" form="form" class="submit-button">Notify me!</button>
+  <button type="reset" form="form">Reset</button> -->
+</body>
+
+</html>
+
+<script>
+  // const form = document.querySelector("form")
+  // form.addEventListener("submit", (event) => {
+  //   event.preventDefault()
+  //   const soyGyros = document.getElementsByName("soygyros")[0].checked
+  //   const potatoWedges = document.getElementsByName("potatowedges")[0].checked
+  //   const settings = {
+  //     "soyGyros": soyGyros,
+  //     "potatoWedges": potatoWedges
+  //   }
+  // })
+  const getMealsButton = document.getElementById("get-meals-btn")
+  getMealsButton.addEventListener("click", (event) => {
+    var ul = document.getElementById("list")
+    const errors = document.getElementsByClassName('error-text');
+    while(errors.length > 0){
+      errors[0].parentNode.removeChild(errors[0]);
+    }
+    ul.innerHTML = ''
+    const emailElement = document.getElementsByName("email")[0]
+    const emailElementErrors = emailElement.errors
+    const email = emailElement.value
+    fetch(`https://t2yvxytyne.execute-api.eu-central-1.amazonaws.com/recipients/${email}`)
+      .then(res => res.json())
+      .then(data => {
+        const meals = data.Item.Meals
+        for (meal of meals) {
+          var li = document.createElement("li")
+          li.appendChild(document.createTextNode(meal))
+          ul.appendChild(li)
+        }
+      })
+      .catch(err => {
+        var p = document.createElement("p")
+        p.appendChild(document.createTextNode("Unknown email address"))
+        p.classList.add("error-text")
+        document.body.appendChild(p)
+      })
+      .finally()
+  })
+</script>
+
+<style>
+  span {
+    background-color: #0069d9;
+    padding: 5px;
+    border-radius: 10px;
+  }
+
+  html {
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  html,
+  body {
+    margin: 0.5rem;
+    height: 100%;
+  }
+
+  h1 {
+    margin-top: 0;
+    font-weight: 500;
+  }
+
+  p {
+    margin-top: 20px;
+    font-weight: bold;
+  }
+
+  form {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    grid-template-rows: 25px 25px 25px;
+    place-items: start;
+  }
+
+  input[type="email"] {
+    width: 300px;
+  }
+
+  input[type="checkbox"] {
+    margin-left: 0;
+  }
+
+  .submit-button {
+    background-color: #007bff;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0069d9;
+  }
+
+  button[type="reset"] {
+    background-color: #6c757d;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+  }
+
+  button[type="reset"]:hover {
+    background-color: #5a6268;
+  }
+
+  .error-text {
+    color: red;
+  }
+
+</style>
