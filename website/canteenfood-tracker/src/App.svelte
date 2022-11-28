@@ -1,11 +1,9 @@
 <script>
-  import Counter from './lib/SubscriptionManager.svelte'
+  import SubscriptionManager from "./lib/SubscriptionManager.svelte";
 </script>
 
 <main>
-  <div class="card">
-    <Counter />
-  </div>
+  <SubscriptionManager />
 </main>
 
 <style>

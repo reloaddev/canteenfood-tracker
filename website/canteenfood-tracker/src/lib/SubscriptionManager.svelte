@@ -1,34 +1,49 @@
 <script lang="ts">
   let email = "";
+  let emailUnknown = false;
   let meals = [];
   function getMeals() {
     fetch(`http://localhost:3000/meals/${email}`)
       .then((res) => res.json())
-      .then((m) => (meals = m))
-      .catch((e) => (meals = []));
+      .then((mealsData) => {
+        emailUnknown = false;
+        meals = mealsData;
+      })
+      .catch((e) => {
+        emailUnknown = true;
+        meals = [];
+      });
   }
 </script>
 
-<h1>Subscription Manager</h1>
-<input
-  bind:value={email}
-  type="email" />
-<button on:click={getMeals}> Get Meals </button>
-<ul id="list">
-  {#each meals as meal}
-    <li>{meal}</li>
-  {/each}
-</ul>
+<div class="flex-column m-2">
+  <h3>Subscription Manager</h3>
+  <div class="form-group d-flex flex-wrap">
+    <input
+      bind:value={email}
+      class="form-control" />
+    <button
+      on:click={getMeals}
+      class="btn btn-primary ms-1">
+      Get Meals
+    </button>
+  </div>
+  {#if meals.length > 0 || emailUnknown == true}
+    <div class="card mt-1">
+      <ul class="list-group list-group-flush">
+        {#each meals as meal}
+          <li class="list-group-item">{meal}</li>
+        {/each}
+        {#if emailUnknown}
+          <li class="list-group-item">No subscriptions found for given email</li>
+        {/if}
+      </ul>
+    </div>
+  {/if}
+</div>
 
 <style>
-  input[type="email"] {
-    width: 250px;
-  }
-
-  button {
-    background-color: #007bff;
-    padding: 10px;
-    border: none;
-    border-radius: 10px;
+  .form-control {
+    width: auto;
   }
 </style>
