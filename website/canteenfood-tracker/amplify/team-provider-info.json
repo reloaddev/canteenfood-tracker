@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-canteenfoodtracker-dev-173610-authRole",
+      "UnauthRoleArn": "arn:aws:iam::861383500621:role/amplify-canteenfoodtracker-dev-173610-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::861383500621:role/amplify-canteenfoodtracker-dev-173610-authRole",
+      "Region": "eu-central-1",
+      "DeploymentBucketName": "amplify-canteenfoodtracker-dev-173610-deployment",
+      "UnauthRoleName": "amplify-canteenfoodtracker-dev-173610-unauthRole",
+      "StackName": "amplify-canteenfoodtracker-dev-173610",
+      "StackId": "arn:aws:cloudformation:eu-central-1:861383500621:stack/amplify-canteenfoodtracker-dev-173610/6eb81210-725f-11ed-808f-0a422088f326",
+      "AmplifyAppId": "d2m97rs0eb8b55"
+    },
+    "categories": {
+      "auth": {
+        "canteenfoodtracker2a17c634": {}
+      }
+    }
+  }
+}

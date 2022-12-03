@@ -1,9 +1,18 @@
 <script lang="ts">
-  let email = "";
+  import { Auth } from "aws-amplify";
   let emailUnknown = false;
   let meals = [];
-  function getMeals() {
-    fetch(`http://localhost:3000/meals/${email}`)
+
+  async function getMeals() {
+    const user = await Auth.currentAuthenticatedUser();
+    const email = user.attributes.email;
+    const authToken = (await Auth.currentSession()).getAccessToken().getJwtToken();
+    fetch(`https://t2yvxytyne.execute-api.eu-central-1.amazonaws.com/recipients/${email}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
+    })
       .then((res) => res.json())
       .then((mealsData) => {
         emailUnknown = false;
@@ -18,13 +27,10 @@
 
 <div class="flex-column m-2">
   <h3>Subscription Manager</h3>
-  <div class="form-group d-flex flex-wrap">
-    <input
-      bind:value={email}
-      class="form-control" />
+  <div class="form-group d-flex">
     <button
       on:click={getMeals}
-      class="btn btn-primary ms-1">
+      class="btn btn-primary">
       Get Meals
     </button>
   </div>
@@ -43,7 +49,4 @@
 </div>
 
 <style>
-  .form-control {
-    width: auto;
-  }
 </style>
