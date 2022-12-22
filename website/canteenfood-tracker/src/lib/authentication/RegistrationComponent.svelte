@@ -1,9 +1,10 @@
-<script lang="ts">
+<script>
   import { Auth } from "aws-amplify";
 
   let email = "";
   let password = "";
-  async function signUp() {
+
+  async function register() {
     try {
       const { user } = await Auth.signUp({
         username: email,
@@ -19,28 +20,17 @@
 
   let confirmEmail = "";
   let confirmCode = "";
-  async function confirmSignUp() {
+  async function confirmRegistration() {
     try {
       await Auth.confirmSignUp(confirmEmail, confirmCode);
     } catch (error) {
       console.log("error confirming sign up", error);
     }
   }
-
-  let singInEmail = "";
-  let signInPassword = "";
-  async function signIn() {
-    try {
-      const user = await Auth.signIn(singInEmail, signInPassword);
-    } catch (error) {
-      console.log("error signing in", error);
-    }
-  }
 </script>
 
-<div class="flex-column m-2">
-  <h3>Sign Up</h3>
-  <div class="d-flex form-group">
+<div class="flex-column mt-1">
+  <div class="d-flex form-group gap-1">
     <input
       bind:value={email}
       type="text"
@@ -52,14 +42,13 @@
       class="form-control"
       placeholder="Password" />
     <button
-      on:click={signUp}
+      on:click={register}
       class="btn btn-primary">Sign Up</button>
   </div>
 </div>
 
-<div class="flex-column m-2">
-  <h3>Confirm Sign Up</h3>
-  <div class="d-flex form-group">
+<div class="flex-column mt-1">
+  <div class="d-flex form-group gap-1">
     <input
       bind:value={confirmEmail}
       type="text"
@@ -71,32 +60,13 @@
       class="form-control"
       placeholder="Confirmation Code" />
     <button
-      on:click={confirmSignUp}
+      on:click={confirmRegistration}
       class="btn btn-primary">Sign Up</button>
   </div>
 </div>
 
-<div class="flex-column m-2">
-  <h3>Sing In</h3>
-  <div class="d-flex form-group">
-    <input
-      bind:value={singInEmail}
-      type="text"
-      class="form-control"
-      placeholder="Email" />
-    <input
-      bind:value={signInPassword}
-      type="password"
-      class="form-control"
-      placeholder="Password" />
-    <button
-      on:click={signIn}
-      class="btn btn-primary">Sign In</button>
-  </div>
-</div>
-
 <style>
-   .form-control {
+  .form-control {
     flex: 1 1 0;
   }
 </style>
