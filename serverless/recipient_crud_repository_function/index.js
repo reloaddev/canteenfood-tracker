@@ -18,7 +18,8 @@ exports.handler = async (event) => {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Origin":
+          "https://canteenfoodtrackerbucketno1.s3.eu-central-1.amazonaws.com",
         "Access-Control-Allow-Headers": "Authorization",
         "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
       },
@@ -36,7 +37,11 @@ exports.handler = async (event) => {
             },
           })
           .promise();
-        body = body.Item.Meals;
+        if (!body || !body.Item || !body.Item.Meals) {
+          body = [];
+        } else {
+          body = body.Item.Meals;
+        }
         break;
       case "GET /recipients":
         body = await dynamo.scan({ TableName: "Recipient" }).promise();
