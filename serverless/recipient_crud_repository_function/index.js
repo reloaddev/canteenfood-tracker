@@ -1,9 +1,5 @@
 const AWS = require("aws-sdk");
 const dynamo = new AWS.DynamoDB.DocumentClient();
-// const allowedOrigins = [
-//   "http://localhost:5173",
-//   "https://canteenfoodtrackerbucketno1.s3.eu-central-1.amazonaws.com",
-// ];
 
 exports.handler = async (event) => {
   let body;
